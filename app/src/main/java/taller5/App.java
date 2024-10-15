@@ -3,115 +3,254 @@
  */
 package taller5;
 
+
+import java.text.DecimalFormat;
+import java.util.Scanner;
+
 public class App {
-    
+
     public static void main(String[] args) {
-        
+
         try {
-            
-        } 
-        
+
+            System.out.println(calcularIntentos());   ///intentos
+            Scanner teclado = new Scanner(System.in);
+
+            System.out.println(simulador_ventas()); /// ventas
+
+            System.out.println(Calcular_empaque(480));   ///  empaques 
+
+            System.out.print("Ingrese la cantidad de jugadores: ");
+            byte cant_jugadores = teclado.nextByte();                    //// jugar21
+            System.out.println(Jugar_21(6));
+
+
+        } catch (Exception e) {
+            System.out.println("Ocurrio un error\n" + e);
+        }
+
+    }
+
+    /*
+     * 
+     * 1. Desarrolle un algoritmo e impleméntelo en Java que: le pida al usuario un
+     * número entero positivo
+     * entre 1000 y 9999. En un ciclo genere números de manera aleatoria y cuente
+     * los intentos que hizo antes
+     * de hallar el número exactamente.
+     * 
+     * 
+     */
+
+    public static String calcularIntentos() {
+
+        String texto = "";
+
+        try {
+
+            Scanner teclado = new Scanner(System.in);
+            int numero = 0, nro_intentos = 0, numero_aleatorio = 0;
+            final int nro_min = 1000, nro_max = 9999;
+
+            System.out.print("Ingresa un numero entero positivo entre 1000 y 9999: ");
+            numero = teclado.nextInt();
+
+            while (numero < nro_min || numero > nro_max) {
+                System.out.print("Numero invalido, Ingrese un numero entero positivo entre 1000 y 9999: ");
+                numero = teclado.nextInt();
+            }
+
+            while (numero != numero_aleatorio) {
+                numero_aleatorio = (int) (Math.random() * (nro_max - nro_min)) + nro_min;
+                nro_intentos++;
+            }
+
+            texto = "Los intentos antes de hallar el numero fueron: " + nro_intentos;
+
+        }
+
         catch (Exception e) {
-            // TODO: handle exception
+            return "Ocurrio un error";
+        }
+
+        return texto;
+    }
+
+    /*
+     * 
+     * 2. Se requiere una función en java que simule las ventas de tres años para un
+     * almacén. Para cada año, deberá generar
+     * un aleatorio para cada mes hasta completar los 12 meses. La función se
+     * llamará Simular_ventas, y debe retornar un String
+     * al final que muestre las ventas de cada año, así:
+     * 
+     * Año 1
+     * Ventas Mes 1: $##.###.###
+     * :
+     * Ventas Mes 12: $##.###.###
+     * Total ventas Año 1: $##.###.###
+     * 
+     * Año 2
+     * Ventas Mes 1: $##.###.###
+     * :
+     * Ventas Mes 12: $##.###.###
+     * Total ventas Año 2: $##.###.###
+     * 
+     * Año 3
+     * Ventas Mes 1: $##.###.###
+     * :
+     * Ventas Mes 12: $##.###.###
+     * Total ventas Año 3: $##.###.###
+     * 
+     * Investigue sobre la clase DecimalFormat para mostrar bien la salida.
+     * import java.text.DecimalFormat;
+     * DecimalFormat form_pesos = new DecimalFormat("$#,###.00");
+     * 
+     * 
+     * 
+     */
+
+    public static String simulador_ventas() {
+
+        try {
+            String texto = "";
+            int ventas_mes = 0, ventas_total = 0;
+            final byte meses_finales = 12, anos_finales = 3, cero = 0;
+            DecimalFormat form_pesos = new DecimalFormat("$#,###.00");
+
+            for (int i = 1; i <= anos_finales; i++) {
+                texto += "Año " + i + "\n";
+                for (int total = 1; total <= meses_finales; total++) {
+                    ventas_mes = (int) (Math.random() * 10000000);
+                    ventas_total += ventas_mes;
+                    texto += "Ventas Mes " + total+ ": " + form_pesos.format(ventas_mes) + "\n";
+                }
+                texto += "Total ventas Año " + i + ": " + form_pesos.format(ventas_total) + "\n" + "\n";
+                ventas_total = cero;
+            }
+
+            return texto;
+        }
+
+        catch (Exception e) {
+            return "Ocurrio un error";
+        }
+
+    }
+
+    // ***************************
+
+    /*
+     * 
+     * 3. En una fábrica se tiene el siguiente patrón de empaque: En una estiba(o
+     * pallet) caben 16 cajas y en cada caja,
+     * caben 30 bombillas. Desarrolle una función que se llame: Calcular_empaque
+     * que: reciba como argumento la cantidad de
+     * bombillas que se deben empacar y a partir de allí: calcule cuántas cajas
+     * necesita, cuántas estibas o pallets necesita.
+     * Luego escriba lo siguiente:
+     * 
+     * Para ### bombillas, se necesitan ## cajas y ## pallets. Se quedan ###
+     * bombillas sin empacar. Se empacará así:
+     * 
+     * Pallet 1 --> Caja1, Caja2……,Caja16
+     * Pallet2 --> Caja17, Caja18…..Caja 32
+     * .
+     * Pallet n -- > Caja m, caja m+1…..
+     * 
+     * La función retornará un texto, con la información anterior. Pruebe la función
+     * llamándola desde el programa principal:
+     * solicite al usuario el número de bombillas e invoque la función para imprimir
+     * en el main, los resultados.
+     * 
+     */
+
+    public static String Calcular_empaque(int bombillos) {
+        try {
+            StringBuilder texto = new StringBuilder();
+            final byte Bombillas_Caja = 30;
+            final byte Cajas_Estiba = 16;
+
+            double totalCajas = (short) (bombillos / Bombillas_Caja);
+            double resto_bombillas = (short) (bombillos - totalCajas * Bombillas_Caja);
+            double total_estiba = Math.ceil(totalCajas / Cajas_Estiba);
+
+            texto.append(String.format(
+                    "Para %s bombillas, se necesitan %s cajas y %s pallets. Se quedan %s bombillas sin empacar.\nSe empacará así:\n",
+                    bombillos, totalCajas, total_estiba, resto_bombillas));
+
+            byte n_pallet = 1;
+            byte c_pallet = 16;
+            for (int i = 1; i <= totalCajas; i++) {
+                if (c_pallet == Cajas_Estiba) {
+                    texto.append(String.format("\nPallet %s => ", n_pallet));
+                    n_pallet++;
+                    c_pallet = 0;
+                }
+                texto.append(String.format("Caja %s, ", i));
+                c_pallet += 1;
+            }
+            return texto.toString();
+        } catch (Exception e) {
+            return "Ha ocurrido un error\n" + e;
         }
     }
 
-
     /*
-    
-        1.	Desarrolle un algoritmo e impleméntelo en Java que: le pida al usuario un número entero positivo 
-        entre 1000 y 9999. En un ciclo genere números de manera aleatoria y cuente los intentos que hizo antes 
-        de hallar el número exactamente.
+     * 
+     * 
+     * 4. En un juego, cada jugador tiene 3 intentos para sacar cartas de una
+     * baraja. Las cartas van numeradas entre 1 y 10.
+     * Una función Jugar_21, deberá simular el juego para una cantidad de usuarios
+     * que enviará el usuario desde el main entre 1 y 6.
+     * 
+     * Para cada uno de los jugadores, el programa le calculará 3 cartas al azar y
+     * al final imprimirá el juego para cada jugador basado en las siguientes
+     * reglas:
+     * 
+     * Si saca 21 exactos: juego perfecto
+     * Si saca más de 21: se pasó
+     * Si saca menos de 21: faltaron puntos
+     * 
+     * La función deberá imprimir los puntos de cada jugador junto con la regla
+     * anterior, como muestra el ejemplo:
+     * 
+     * Jugador X, puntos 21 -- > juego perfecto
+     * Jugador Y, puntos 26 -- > se pasó
+     * .
+     * .
+     * 
+     * 
+     */
+
+     public static String Jugar_21(int cant_jugadores){
+        try {
+            String texto="";
+            int suma_cartas=0;
+            int carta=0;
+            int ba_min=1;
+            int ba_max=10;
+             for(int jugador=1;jugador<=cant_jugadores;jugador++){
+                 texto+="Jugador "+jugador+", puntos ";
+                 for(int intento=0;intento<3;intento++){
+                     carta=(int)(Math.random()*(ba_max-ba_min+1)+ba_min);
+                     suma_cartas+=carta;
+                 }
+                 if(suma_cartas==21){
+                     texto+=suma_cartas+" -- >"+" juego perfecto \n";
+                 }else if(suma_cartas>21){
+                     texto+=suma_cartas+" -- >"+" se pasó \n";
+                 }else if(suma_cartas<21){
+                     texto+=suma_cartas+" -- >"+" faltaron puntos \n";
+                 }
+                 suma_cartas=0;
+             }
+            return texto;
+          }
+          catch (Exception e) {
+              return "Ocurrió un error inesperado";
+          }
         
-    
-    */ 
-
-
-
-
-    /* 
-     
-        2.	Se requiere una función en java que simule las ventas de tres años para un almacén. Para cada año, deberá generar 
-        un aleatorio para cada mes hasta completar los 12 meses. La función se llamará Simular_ventas, y debe retornar un String 
-        al final que muestre las ventas de cada año, así:
-        
-            Año 1
-            Ventas Mes 1: $##.###.###
-            :
-            Ventas Mes 12: $##.###.###
-            Total ventas Año 1:  $##.###.###
-            
-            Año 2
-            Ventas Mes 1: $##.###.###
-            :
-            Ventas Mes 12: $##.###.###
-            Total ventas Año 2: $##.###.###
-            
-            Año 3
-            Ventas Mes 1: $##.###.###
-            :
-            Ventas Mes 12: $##.###.###
-
-            Total ventas Año 3: $##.###.###
-            
-            Investigue sobre la clase DecimalFormat para mostrar bien la salida. 
-            import java.text.DecimalFormat;
-            DecimalFormat form_pesos = new DecimalFormat("$#,###.00");
-
-        
-      
-    */
-
-    
-
-
-
-    /*  
-     
-        3.	En una fábrica se tiene el siguiente patrón de empaque: En una estiba(o pallet) caben 16  cajas y en cada caja, 
-        caben 30 bombillas. Desarrolle una función que se llame: Calcular_empaque que: reciba como argumento la cantidad de 
-        bombillas que se deben empacar y a partir de allí: calcule cuántas cajas necesita, cuántas estibas o pallets necesita. 
-        Luego escriba lo siguiente: 
-
-        Para ### bombillas, se necesitan ## cajas y ## pallets. Se quedan ### bombillas sin empacar. Se empacará así:
-
-        Pallet 1 --> Caja1, Caja2……,Caja16
-        Pallet2 -->  Caja17, Caja18…..Caja 32
-        .
-        Pallet n -- > Caja m, caja m+1…..
-        
-        La función retornará un texto, con la información anterior. Pruebe la función llamándola desde el programa principal: solicite al usuario el número de bombillas e invoque la función para imprimir en el main, los resultados.
-
-
-
-    */
-
-
-
-    
-
-    /* 
-    
-
-        4.	En un juego, cada jugador tiene 3 intentos para sacar cartas de una baraja. Las cartas van numeradas entre 1 y 10. 
-        Una función Jugar_21, deberá simular el juego para una cantidad de usuarios que enviará el usuario desde el main entre 1 y 6.
-
-        Para cada uno de los jugadores, el programa le calculará 3 cartas al azar y al final imprimirá el juego para cada jugador basado en las siguientes reglas: 
-        
-        Si saca 21 exactos: juego perfecto
-        Si saca más de 21: se pasó
-        Si saca menos de 21: faltaron puntos
-
-        La función deberá imprimir los puntos de cada jugador junto con la regla anterior, como muestra el ejemplo:
-
-        Jugador X, puntos 21 -- > juego perfecto
-        Jugador Y, puntos 26 -- > se pasó
-        .
-        .
-
-
-    */
-
-
+    }
 
 }
